@@ -126,7 +126,7 @@ Vue.component('hud-component', {
                         <div class="x belt" :style="{ opacity: belt ? 1 : 0.5 }"><i class="fa-solid fa-seat-airline"></i></div>
                     </div>
                     <div class="speed-data">
-                        <div class="speed-overlay" style="position:absolute; top:20%;left:25%;">000</div>
+                        <div class="speed-overlay" style="position:absolute; top:20%;left:25%;">888</div>
                         <div class="speed" style="position:absolute; top:20%;left:25%;">{{ speed }}</div>
                     </div>
                 </div>

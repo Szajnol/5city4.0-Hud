@@ -17,3 +17,7 @@ Dołącz na discorda : https://discord.gg/iconicscripts I zapytaj na kanale pomo
 ## Feedback
 
 Jeśli masz jakieś propozycje lub pytania dotrzesz do nas tutaj : https://discord.gg/iconicscripts
+
+## Klip z oficjalnego 5city
+
+<iframe src="https://clips.twitch.tv/embed?clip=FunnySquareTapirMoreCowbell-gaYhi11rav4ts57H&parent=www.example.com" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620"></iframe>

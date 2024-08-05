@@ -23,21 +23,20 @@ Vue.component('hud-component', {
             let dashLength = (percentage / 100) * perimeter;
             let offset = perimeter / 2.6;
             
-            // jQuery for updating stroke attributes
             $(`#${stat}`).attr('stroke-dasharray', `${dashLength} ${perimeter - dashLength}`);
             $(`#${stat}`).attr('stroke-dashoffset', offset);
         },
         getVoicePercentage(voice) {
-            let percentage = 0;
-            if (voice === 3) {
-                percentage = 25;
-            } else if (voice === 7) {
-                percentage = 50;
-            } else if (voice === 15) {
-                percentage = 100;
-            }
-            return percentage;
-        },
+          let percentage = 0;
+          if (voice === 3) {
+              percentage = 25;
+          } else if (voice === 7) {
+              percentage = 50;
+          } else if (voice === 15) {
+              percentage = 100;
+          }
+          return percentage;
+      },
         toggleHud(toggle) {
             this.hudVisible = toggle;
             // jQuery for animation
@@ -49,7 +48,6 @@ Vue.component('hud-component', {
         },
         toggleCarHud(toggle) {
             this.carHudVisible = toggle;
-            // jQuery for animation
             console.log(toggle)
             if (toggle) {
                 $(".carhud-container").animate({ bottom: '1.5vw' }, 300);
@@ -76,7 +74,6 @@ Vue.component('hud-component', {
                 this.updateStats('thirstx', event.data.thirst);
                 this.updateStats('voicex', this.getVoicePercentage(event.data.voice));
                 this.talking = event.data.talking;
-                // Update opacity using jQuery
                 $('.voicex').css('opacity', this.talking ? '0.8' : '1');
             } else if (action === 'toggleHud') {
                 this.toggleHud(event.data.toggle);

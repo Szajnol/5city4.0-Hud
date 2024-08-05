@@ -74,7 +74,7 @@ Vue.component('hud-component', {
                 this.updateStats('thirstx', event.data.thirst);
                 this.updateStats('voicex', this.getVoicePercentage(event.data.voice));
                 this.talking = event.data.talking;
-                $('.voicex').css('opacity', this.talking ? '0.8' : '1');
+                $('#voice').css('fill', this.talking ? '#6E25D9' : 'var(--voice)');
             } else if (action === 'toggleHud') {
                 this.toggleHud(event.data.toggle);
             } else if (action === 'toggleCarhud') {

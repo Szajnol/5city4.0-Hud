@@ -1,13 +1,11 @@
-ESX = exports["es_extended"]:getSharedObject()
-
 local HUD_UPDATE_INTERVAL = 900
 local CARHUD_SLEEP_INTERVAL = 150
 
-local hunger, thirst, inVeh = 0, 0, false
+local hunger, thirst, inVeh, toggle = 0, 0, false, true
 
+local directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
 
 local function updatePlayerStatus()
-    local ped = PlayerPedId()
     TriggerEvent('esx_status:getStatus', 'hunger', function(status)
         hunger = status.getPercent()
     end)
@@ -19,70 +17,12 @@ end
 local function updateHud()
     SendNUIMessage({
         action = 'updateHud',
-        health = GetEntityHealth(PlayerPedId()) / 2,
+        health = LocalPlayer.state.isDead and 0 or math.floor(GetEntityHealth(cache.ped) / 2),
         hunger = hunger,
         thirst = thirst,
-        talking = NetworkIsPlayerTalking(PlayerId()),
+        talking = NetworkIsPlayerTalking(cache.playerId),
         voice = LocalPlayer.state['proximity'].distance,
     })
-end
-
-local function compass(heading)
-    if heading >= 337.5 or heading <= 22.5 then
-        return "N"
-    elseif heading > 22.5 and heading < 67.5 then
-        return "NE"
-    elseif heading >= 67.5 and heading <= 112.5 then
-        return "E"
-    elseif heading > 112.5 and heading < 157.5 then
-        return "SE"
-    elseif heading >= 157.5 and heading <= 202.5 then
-        return "S"
-    elseif heading > 202.5 and heading < 247.5 then
-        return "SW"
-    elseif heading >= 247.5 and heading <= 292.5 then
-        return "W"
-    else
-        return "NW"
-    end
-end
-
-
-local function updateCarHud()
-    local speed = 0
-    local ped = PlayerPedId()
-    local x, y, z, streetName, zone, heading = nil, nil, nil, nil, nil, 0
-
-    while inVeh do 
-        DisplayRadar(true)
-        local vehicle = GetVehiclePedIsIn(ped, false)
-        if vehicle then
-            x, y, z = table.unpack(GetEntityCoords(ped))
-            zone = GetLabelText(GetNameOfZone(x, y, z))
-            speed = math.floor(GetEntitySpeed(vehicle) * 3.6)
-            local streetHash = GetStreetNameAtCoord(x, y, z)
-            streetName = GetStreetNameFromHashKey(streetHash)
-            heading = 360.0 - ((GetGameplayCamRot(0).z + 360.0) % 360.0)
-        end
-
-        SendNUIMessage({
-            action = "updateCarhud",
-            toggle = true,
-            speed = speed,
-            street = streetName,
-            fuel = Entity(vehicle).state.fuel,
-            engine = GetIsVehicleEngineRunning(vehicle),
-            direction = compass(heading),
-        })
-        Wait(CARHUD_SLEEP_INTERVAL)
-    end
-
-    if not inVeh then
-        SendNUIMessage({
-            action = "carhudAction",
-            toggle = false,
-        })
-    end
 end
 
 local function InitMap()
@@ -99,13 +39,15 @@ local function InitMap()
         minimapOffset = ((defaultAspectRatio - aspectRatio) / 3.6) - 0.008
     end
 
+    print(aspectRatio)
+
     SetMinimapClipType(0)
     AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "squaremap", "radarmasksm")
     AddReplaceTexture("platform:/textures/graphics", "radarmask1g", "squaremap", "radarmasksm")
 
     SetMinimapComponentPosition("minimap", "L", "B", 0.0 + minimapOffset, -0.017, 0.1638, 0.180)
     SetMinimapComponentPosition("minimap_mask", "L", "B", 0.0 + minimapOffset, 0.0, 0.128, 0.20)
-    SetMinimapComponentPosition('minimap_blur', 'L', 'B', 0.005 + minimapOffset, 0.025, 0.200, 0.290)
+    SetMinimapComponentPosition('minimap_blur', 'L', 'B', 0.005 + minimapOffset, 0.025, aspectRatio / 7, aspectRatio / 5.5)
     SetBlipAlpha(GetNorthRadarBlip(), 0)
     SetMinimapClipType(0)
 
@@ -116,9 +58,8 @@ local function InitMap()
     end
 end
 
-Citizen.CreateThread(function ()
+Citizen.CreateThread(function()
     InitMap()
-
     while true do
         updatePlayerStatus()
         updateHud()
@@ -126,16 +67,34 @@ Citizen.CreateThread(function ()
     end
 end)
 
+local function StartCarThread(vehicle)
+    Citizen.CreateThread(function()
+        while inVeh do
+            local coords = GetEntityCoords(cache.ped)
+            local speed = math.floor(GetEntitySpeed(vehicle) * 3.6)
+            local street = GetStreetNameFromHashKey(GetStreetNameAtCoord(coords.x, coords.y, coords.z))
+            local heading = 360.0 - ((GetGameplayCamRot(0).z + 360.0) % 360.0)
+    
+            SendNUIMessage({
+                action = "updateCarhud",
+                toggle = true,
+                speed = speed,
+                street = street,
+                fuel = Entity(vehicle).state.fuel,
+                engine = GetIsVehicleEngineRunning(vehicle),
+                direction = directions[(math.floor((heading / 45) + 0.5) % 8) + 1],
+            })
+            Wait(CARHUD_SLEEP_INTERVAL)
+        end
+    end)
+end
+
 lib.onCache('vehicle', function(value)
-    if cache.vehicle == false then
-        inVeh = true
-        DisplayRadar(true)
-        SendNUIMessage({ action = "toggleCarhud", toggle = true })
-        updateCarHud()
-    else
-        DisplayRadar(false)
-        inVeh = false
-        SendNUIMessage({ action = "toggleCarhud", toggle = false })
+    inVeh = value and true or false
+    DisplayRadar(inVeh)
+    SendNUIMessage({action = "toggleCarhud", toggle = inVeh})
+    if inVeh then
+        StartCarThread(value)
     end
 end)
 

@@ -21,3 +21,5 @@ Jeśli masz jakieś propozycje lub pytania dotrzesz do nas tutaj : https://disco
 ## Klip z oficjalnego 5city
 
 https://clips.twitch.tv/FunnySquareTapirMoreCowbell-gaYhi11rav4ts57H
+
+### Błedy w lua poprawione i zauważone zostały przez https://github.com/PiotreeQ/

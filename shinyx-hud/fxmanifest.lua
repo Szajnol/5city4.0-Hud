@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 version '1.0.0'
-author 'ShinyX
+author 'ShinyX'
 
 client_scripts {
         'config.lua',

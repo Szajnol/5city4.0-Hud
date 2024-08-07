@@ -4,8 +4,8 @@ version '1.0.0'
 author 'ShinyX
 
 client_scripts {
+        'config.lua',mm
 	'client.lua',
-	'config.lua'
 }
 ui_page {
 	'html/index.html'

@@ -153,7 +153,7 @@ text {
   border: #542398 solid 0.3vw;
   height: 3vw;
   width: 18vw;
-  bottom: 16vw;
+  bottom: 14vw;
   background: linear-gradient(180deg, #060606e1 0%, hsla(279, 37%, 15%, 1) 99%);
   border-radius: 0.3vw;
   gap: 1vw;
@@ -169,4 +169,87 @@ text {
   font-weight: bold;
   margin-left: auto;
   margin-right: 1vw;
+}
+
+.notify-container{
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  position: absolute;
+  right: 1vw;
+  height: 80%;
+  min-width: 10vw;
+}
+
+.notify{
+  position: relative;
+  background: linear-gradient(180deg, #000000 0%, hsla(280, 49%, 23%, 0.9) 99%);
+  height: 2.5vw;
+  min-width: 12vw;
+  right: -20vw;
+}
+
+.data{
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  min-width: 100%;
+  height: 90%;
+  font-size: 0.8vw;
+  margin-left: 1vw;
+  margin-right: 2vw;
+}
+
+.desc{
+  margin-right: auto;
+}
+
+.progressbar-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 5vw;
+  min-width: 18vw;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10vw;
+  background: linear-gradient(180deg, #000000 0%, hsla(280, 49%, 23%, 0.9) 99%);
+  border-radius: 0.3vw;
+  border: #8D3AFE solid 0.2vw;
+  font-weight: bold;
+  font-size: 0.75vw;
+}
+
+
+.line{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.progress{
+  width: 100%;
+  height: 0.3vw;
+  background: rgba(255, 255, 255, 0.092);
+  border-radius: 0.3vw;
+}
+
+.fill{
+  height: 100%;
+  width: 100%;
+  background: #8D3AFE;
+  border-radius: 0.3vw;
+  animation: progress 5s linear forwards;
+}
+
+.fa-light{
+  color: #8D3AFE;
+}
+
+@keyframes progress {
+  from { width: 100%; }
+  to { width: 0%; }
 }

@@ -83,6 +83,7 @@ local function StartCarThread(vehicle)
                 fuel = Entity(vehicle).state.fuel,
                 engine = GetIsVehicleEngineRunning(vehicle),
                 direction = directions[(math.floor((heading / 45) + 0.5) % 8) + 1],
+                belt = Config.BeltExport,
             })
             Wait(CARHUD_SLEEP_INTERVAL)
         end
@@ -111,3 +112,10 @@ RegisterCommand('hud', function()
 end)
 
 RegisterKeyMapping('hud', 'Pokaż Hud', 'MOUSE_BUTTON', 'MOUSE_MIDDLE')
+
+exports('sendNotify', function(data) SendNUIMessage({action = 'Notify', desc = data}) end)
+
+
+RegisterCommand('testNotify2', function()
+    exports['shinyx-hud']:sendNotify('Otworzyłeś panel Administracyjny')
+end)

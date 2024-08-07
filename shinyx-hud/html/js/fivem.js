@@ -13,7 +13,7 @@ Vue.component('hud-component', {
             belt: false,
             fuel: 0,
             street: 'Strawberry Ave.',
-            direction: 'S'
+            direction: 'S',
         };
     },
     methods: {
@@ -23,20 +23,21 @@ Vue.component('hud-component', {
             let dashLength = (percentage / 100) * perimeter;
             let offset = perimeter / 2.6;
             
+            // jQuery for updating stroke attributes
             $(`#${stat}`).attr('stroke-dasharray', `${dashLength} ${perimeter - dashLength}`);
             $(`#${stat}`).attr('stroke-dashoffset', offset);
         },
         getVoicePercentage(voice) {
-          let percentage = 0;
-          if (voice === 3) {
-              percentage = 25;
-          } else if (voice === 7) {
-              percentage = 50;
-          } else if (voice === 15) {
-              percentage = 100;
-          }
-          return percentage;
-      },
+            let percentage = 0;
+            if (voice === 1.5) {
+                percentage = 25;
+            } else if (voice === 3) {
+                percentage = 50;
+            } else if (voice === 6) {
+                percentage = 100;
+            }
+            return percentage;
+        },
         toggleHud(toggle) {
             this.hudVisible = toggle;
             // jQuery for animation
@@ -48,6 +49,7 @@ Vue.component('hud-component', {
         },
         toggleCarHud(toggle) {
             this.carHudVisible = toggle;
+            // jQuery for animation
             console.log(toggle)
             if (toggle) {
                 $(".carhud-container").animate({ bottom: '1.5vw' }, 300);
@@ -74,6 +76,7 @@ Vue.component('hud-component', {
                 this.updateStats('thirstx', event.data.thirst);
                 this.updateStats('voicex', this.getVoicePercentage(event.data.voice));
                 this.talking = event.data.talking;
+                // Update opacity using jQuery
                 $('#voice').css('fill', this.talking ? '#6E25D9' : 'var(--voice)');
             } else if (action === 'toggleHud') {
                 this.toggleHud(event.data.toggle);
@@ -88,7 +91,35 @@ Vue.component('hud-component', {
                     event.data.street,
                     event.data.direction
                 );
+            } else if (action === 'Notify') {
+                this.createNotify(event.data.desc);
             }
+        },
+        createNotify(message) {
+            const notifyHtml = `
+
+            <div class="notify">
+                <div class="data">
+                    <i class="fa-light fa-circle-info"></i>
+                    <div class="desc">${message}</div>
+                </div>
+                <div class="line">
+                    <div class="progress"><div class="fill"></div></div>
+                </div>
+            </div>
+        `;
+        
+        let $notify = $(notifyHtml);
+        $('.notify-container').append($notify);
+        
+    
+        $notify.animate({ right: '0vw' }, 300);
+        setTimeout(function() {
+            $notify.animate({ right: '-20vw' }, 300);
+            setTimeout(function() {
+                $notify.remove();
+            }, 500);
+        }, 5000);
         }
     },
     mounted() {
@@ -98,23 +129,23 @@ Vue.component('hud-component', {
         <div>
             <div v-show="hudVisible" class="container">
                 <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="healthx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--health)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
+                    <rect id="healthx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--health)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="health">&#xf004;</text>
                 </svg>
                 <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="hungerx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--hunger)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
+                    <rect id="hungerx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--hunger)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="hunger">&#xf805;</text>
                 </svg>
                 <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="thirstx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--thirst)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
+                    <rect id="thirstx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--thirst)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="thirst">&#xf869;</text>
                 </svg>
                 <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="voicex" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--voice)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
+                    <rect id="voicex" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--voice)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="voice">&#xf6a8;</text>
                 </svg>
                 <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="devx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--dev)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
+                    <rect id="devx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--dev)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="dev">&#xf120;</text>
                 </svg>
             </div>
@@ -141,18 +172,14 @@ Vue.component('hud-component', {
                 <div class="street">{{ street }}</div> 
                 <div class="direction x">{{ direction }}</div>
             </div>
+            <div class="notify-container">
+
+            </div>
         </div>
+
     `
-  });
+});
   
-  new Vue({
+new Vue({
     el: '#app'
-  });
-  
-  
-  
-  
-  
-  
-  
-  
+});

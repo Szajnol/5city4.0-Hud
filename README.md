@@ -1,5 +1,5 @@
 # 5city 4.0 Hud
-Hud inspirowany Polskim serwerem Fivecity z edycji 4.0 Nie jest on perfekcyjny będzie otrzymywał aktalizacje
+Hud i Powiadomienia inspirowane Polskim serwerem Fivecity z edycji 4.0 Nie jest on perfekcyjny będzie otrzymywał aktalizacje
 
 ![5city](https://github.com/user-attachments/assets/77ddb368-2cdf-4071-8310-ba79a535d527)
 
@@ -8,6 +8,10 @@ Hud inspirowany Polskim serwerem Fivecity z edycji 4.0 Nie jest on perfekcyjny b
 #### Co potrzebuje żeby skrypt działał?
 
 ESX oraz ox_lib
+
+#### Export do powiadomień
+
+exports['shinyx-hud']:sendNotify('Otworzyłeś panel Administracyjny')
 
 #### Nie działa mi skrypt co zrobić
 

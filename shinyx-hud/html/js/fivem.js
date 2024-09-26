@@ -13,7 +13,7 @@ Vue.component('hud-component', {
             thirst: 0,
             voice: 0,
             talking: false,
-            carHudVisible: false,
+            carHudVisible: true,
             hudVisible: true,
             speed: 0,
             engine: false,
@@ -30,7 +30,6 @@ Vue.component('hud-component', {
             let dashLength = (percentage / 100) * perimeter;
             let offset = perimeter / 2.6;
             
-            // jQuery for updating stroke attributes
             $(`#${stat}`).attr('stroke-dasharray', `${dashLength} ${perimeter - dashLength}`);
             $(`#${stat}`).attr('stroke-dashoffset', offset);
         },
@@ -47,7 +46,6 @@ Vue.component('hud-component', {
         },
         toggleHud(toggle) {
             this.hudVisible = toggle;
-            // jQuery for animation
             if (toggle) {
                 $(".container").animate({ right: '1vw' }, 300);
             } else {
@@ -56,8 +54,6 @@ Vue.component('hud-component', {
         },
         toggleCarHud(toggle) {
             this.carHudVisible = toggle;
-            // jQuery for animation
-            console.log(toggle)
             if (toggle) {
                 $(".carhud-container").animate({ bottom: '1.5vw' }, 300);
                 $(".streetlabel").animate({ left: '2vw' }, 300);
@@ -83,7 +79,6 @@ Vue.component('hud-component', {
                 this.updateStats('thirstx', event.data.thirst);
                 this.updateStats('voicex', this.getVoicePercentage(event.data.voice));
                 this.talking = event.data.talking;
-                // Update opacity using jQuery
                 $('#voice').css('fill', this.talking ? '#6E25D9' : 'var(--voice)');
             } else if (action === 'toggleHud') {
                 this.toggleHud(event.data.toggle);
@@ -151,10 +146,6 @@ Vue.component('hud-component', {
                     <rect id="voicex" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--voice)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
                     <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="voice">&#xf6a8;</text>
                 </svg>
-                <svg id="svgSquare" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-                    <rect id="devx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--dev)" stroke-width="20" stroke-dasharray="0, 1000"></rect>
-                    <text x="50%" y="52%" text-anchor="middle" dy=".3em" class="fa" id="dev">&#xf120;</text>
-                </svg>
             </div>
   
             <div v-show="carHudVisible" class="carhud-container">
@@ -164,9 +155,9 @@ Vue.component('hud-component', {
                         <div class="x belt" :style="{ opacity: belt ? 1 : 0.5 }"><i class="fa-solid fa-seat-airline"></i></div>
                     </div>
                     <div class="speed-data">
-                        <div class="speed-overlay" style="position:absolute; top:20%;left:25%;">888</div>
-                        <div class="speed" style="position:absolute; top:20%;left:25%;">{{ speed }}</div>
+                        <div class="speed" >{{ speed }}</div>
                     </div>
+                    <div class="type">KMH</div>
                 </div>
                 <svg id="svgSquare" class="fuel" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
                     <rect id="fuelx" x="10" y="10" width="180" height="180" fill="#060606" stroke="var(--fuel)" stroke-width="15" stroke-dasharray="0, 1000"></rect>
@@ -186,6 +177,8 @@ Vue.component('hud-component', {
 
     `
 });
+
+
   
 new Vue({
     el: '#app'
